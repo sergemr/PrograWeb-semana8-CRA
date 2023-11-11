@@ -8,7 +8,7 @@ import User from "../User/User";
 
 const Home = () => {
   const [data, setData] = React.useState("Un texto");
-  const [formValues, setFormValues] = React.useState("Un texto");
+  const [formValues, setFormValues] = React.useState();
   const [users, setUsers] = React.useState();
 
   const mockUser = {
@@ -54,7 +54,7 @@ const Home = () => {
 
   const callAPI = (event) => {
     axios
-      .get("http://10.17.19.22/api.php/records/Users")
+      .po("http://10.17.19.22/api.php/records/Users")
       .then(function (response) {
         // handle success
         console.log(response.data.records);
