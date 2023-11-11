@@ -7,6 +7,10 @@ Repositorio con proyecto base en React.
 1. Applicacion creada con Create react app
 2. Material UI instalados
 
+# Para usar el proyecto.
+
+1. Como vimos en clase, al descargar un proyecto de react, ejecutamos npm install antes de nada, con eso aseguramos que cualquier libreria que el proyecto ocupe sea instalada.
+
 # Como levantar el API de la base de datos
 
 1. Configurar el archivo apiDB.php con los cambos necesarios
