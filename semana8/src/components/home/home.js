@@ -18,7 +18,9 @@ const Home = () => {
   const [authenticated, setAuthenticated] = React.useState();
   const [users, setUsers] = React.useState();
   const [notes, setNotes] = React.useState();
-  const urlDelApi = "http://localhost:8088/apiDB.php/records";
+
+  const urlDelApi = "http://10.17.19.22/api.php/records";
+
   const mockUser = {
     usuario: "admin",
     password: "admin",
@@ -78,6 +80,8 @@ const Home = () => {
       mockUser.password === formValues.password
     ) {
       console.log("Usuario correcto");
+    } else {
+      console.log("Usuario incorrecto");
     }
   };
 
@@ -96,7 +100,9 @@ const Home = () => {
       .get(`${urlDelApi}/Notes`)
       .then(function (response) {
         // handle success
+        console.log(response);
         console.log(response.data.records);
+        console.log(response.statusText);
         setNotes(response.data.records);
       })
       .catch(function (error) {
@@ -118,13 +124,14 @@ const Home = () => {
     const data = formValues;
 
     // ("/records/categories?filter=id,gt,1&filter=id,lt,3");
+    console.log("data");
     axios
       .get(
         `${urlDelApi}/Users?filter=Username,eq,${formValues.usuario}&filter=Password,eq,${formValues.password}`
       )
       .then(function (response) {
         // handle success
-        console.log(response.data.records);
+        console.log("data", response.data.records);
         setUsers(response.data.records);
       })
       .catch(function (error) {
@@ -136,6 +143,26 @@ const Home = () => {
       });
   };
 
+  const insertNoteToDB = () => {
+    axios
+      .post(`${urlDelApi}/Notes`, {
+        UserID: 2,
+        Title: "Task 1",
+        Content: "This is the content of Task 1 for user 2.",
+        CreatedAt: "2023-10-10 15:56:41",
+      })
+      .then(function (response) {
+        // handle success
+        callAPINotes();
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+  };
   return (
     <div className={styles.Home}>
       <h1>{data}</h1>
@@ -196,6 +223,10 @@ const Home = () => {
           <Button onClick={callAPMockNotes} variant="contained" sx={{ mx: 2 }}>
             Llamar Local
           </Button>
+
+          <Button onClick={insertNoteToDB} variant="contained" sx={{ mx: 2 }}>
+            Insertar nota
+          </Button>
           <Button onClick={clearNotes} color="secondary" variant="text">
             Limpiar
           </Button>
@@ -210,12 +241,14 @@ const Home = () => {
       </Grid>
 
       <Card id="card-home" className={styles["card-home"]}>
+        {console.log("por aca ando")}
+
         <Grid container spacing={2}>
-          {notes?.map((fila, index) => {
+          {notes?.map((nota, index) => {
             return (
-              <Grid item>
+              <Grid item xs={4}>
                 {" "}
-                <Note note={fila}></Note>
+                <Note titulo="titulo" note={nota}></Note>
               </Grid>
             );
           })}
