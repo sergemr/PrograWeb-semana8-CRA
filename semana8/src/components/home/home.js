@@ -142,13 +142,17 @@ const Home = () => {
         // always executed
       });
   };
-
+    var i=0;
+    
   const insertNoteToDB = () => {
+    const data = formValues;
+    console.log("data");
+
     axios
       .post(`${urlDelApi}/Notes`, {
-        UserID: 2,
-        Title: "Task 1",
-        Content: "This is the content of Task 1 for user 2.",
+        UserID: i+1,
+        Title: "Note "+i,
+        Content:formValues.nota,
         CreatedAt: "2023-10-10 15:56:41",
       })
       .then(function (response) {
@@ -224,6 +228,17 @@ const Home = () => {
             Llamar Local
           </Button>
 
+          <br></br>
+          <h2>Inserte su nota acá!</h2>
+          <TextField
+            id="outlined-basic"
+            name="nota"
+            label="Nota"
+            onChange={onChancheInput}
+            variant="standard"
+          />
+          <br></br>
+          <br></br>
           <Button onClick={insertNoteToDB} variant="contained" sx={{ mx: 2 }}>
             Insertar nota
           </Button>
