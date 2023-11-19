@@ -26,7 +26,7 @@ const Note = (props) => (
     />
     <br />
     <Button color="secondary" variant="text">
-      editar
+      editar nota
     </Button>
   </div>
 );
