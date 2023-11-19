@@ -159,12 +159,21 @@ const Home = () => {
       });
     };
 
+//reset data when onclick submit button
+    const handleReset = () => {
+      setFormData({
+        UserID: '',
+        Title: '',
+        Content: ''
+      });
+    };
+
     const insertNoteToDB2 = () => {
       axios
       .post(`${urlDelApi}/notes`, formData)
       .then(function (response) {
-        // handle success
-        callAPINotes();
+        // calling reset action
+        handleReset();
       })
         .then(function (response) {
           // handle success
