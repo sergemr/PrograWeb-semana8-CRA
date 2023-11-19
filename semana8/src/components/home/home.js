@@ -5,12 +5,13 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-
+import { useState } from "react";
 import axios from "axios";
 import User from "../User/User";
 import Note from "../Note/Note";
 
 const Home = () => {
+  //constante
   const [data, setData] = React.useState(
     "Ejemplo React, estados y llamados a API"
   );
@@ -19,7 +20,7 @@ const Home = () => {
   const [users, setUsers] = React.useState();
   const [notes, setNotes] = React.useState();
 
-  const urlDelApi = "http://10.17.19.22/api.php/records";
+  const urlDelApi = "http://localhost/dashboard/apiDB.php/records";
 
   const mockUser = {
     usuario: "admin",
@@ -97,7 +98,7 @@ const Home = () => {
 
   const callAPINotes = (event) => {
     axios
-      .get(`${urlDelApi}/Notes`)
+      .get(`${urlDelApi}/notes`) //cambio direccion
       .then(function (response) {
         // handle success
         console.log(response);
@@ -143,13 +144,63 @@ const Home = () => {
       });
   };
 
+
+  //inicio tarea
+ //varibale para ingresar datos al api
+    const [formData, setFormData] = useState({
+      UserID: '',
+      Title: '',
+      Content: ''
+    });
+    const handleChange = (e) => {
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value
+      });
+    };
+
+//reset data when onclick submit button
+    const handleReset = () => {
+      setFormData({
+        UserID: '',
+        Title: '',
+        Content: ''
+      });
+    };
+
+    const insertNoteToDB2 = () => {
+      axios
+      .post(`${urlDelApi}/notes`, formData)
+      .then(function (response) {
+        // calling reset action
+        handleReset();
+      })
+        .then(function (response) {
+          // handle success
+          callAPINotes();
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function () {
+          // always executed
+        });
+    };
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      insertNoteToDB2(formData);
+    };
+
+
+    //codigo local para bd
   const insertNoteToDB = () => {
     axios
-      .post(`${urlDelApi}/Notes`, {
-        UserID: 2,
+      .post(`${urlDelApi}/notes`, {
+        UserID: 3,
         Title: "Task 1",
-        Content: "This is the content of Task 1 for user 2.",
-        CreatedAt: "2023-10-10 15:56:41",
+        Content: "nota quemada insertada desde vs code.",
       })
       .then(function (response) {
         // handle success
@@ -200,15 +251,60 @@ const Home = () => {
           </Button>
         </Grid>
         <Grid item xs={6}>
-          <h2>Llamar API y base de datos</h2>
+          <h2>Llamar/insertar API y base de datos</h2>
           <p>
             {" "}
             Este boton hace un llamado a la base de datos previamente
             configurada
-          </p>
-          <Button onClick={callAPINotes} variant="contained" sx={{ mx: 2 }}>
+          </p> 
+        
+
+        
+          <Grid item xs={3} style={{}}>
+          <form onSubmit={handleSubmit}>
+          
+          
+          <label>
+          UserID:
+          <input
+            type="text"
+            name="UserID"
+            value={formData.UserID}
+            onChange={handleChange}
+          />
+        </label>
+        <br />
+
+<label>
+  Título:
+  <input
+    type="text"
+    name="Title"
+    value={formData.Title}
+    onChange={handleChange}
+  />
+</label>
+<br />
+
+<label>
+  Contenido:
+  <textarea
+    name="Content"
+    value={formData.Content}
+    onChange={handleChange}
+  />
+</label>
+<br /><br />
+<Button  type="submit" variant="contained" sx={{ mx: 2 }}>
+            Insertar nota API
+          </Button>
+          </form>
+          </Grid>
+
+          <Button onClick={callAPINotes} variant="contained" sx={{ mx: 3 }}>
             Llamar API
           </Button>
+          <br></br><br></br>
           <Button onClick={clearNotes} color="secondary" variant="text">
             Limpiar
           </Button>
