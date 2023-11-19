@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "./home.module.css";
 import TextField from "@mui/material/TextField";
@@ -19,7 +19,7 @@ const Home = () => {
   const [users, setUsers] = React.useState();
   const [notes, setNotes] = React.useState();
 
-  const urlDelApi = "http://10.17.19.22/api.php/records";
+  const urlDelApi = "https://localhost/dashboard/apiOP.php/records";
 
   const mockUser = {
     usuario: "admin",
@@ -113,6 +113,26 @@ const Home = () => {
         // always executed
       });
   };
+  const updateAPINotes = (event) => {
+    axios
+    .get(`${urlDelApi}/Notes`+formValues.NoteID)
+      .then(function (response) {
+        // handle success
+        console.log(response);
+        console.log(response.data.records);
+        console.log(response.statusText);
+        setNotes(response.data.records);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+  };
+
+  
   const callAPMockNotes = (event) => {
     setNotes(mockNotes);
   };
@@ -142,7 +162,7 @@ const Home = () => {
         // always executed
       });
   };
-    var i=0;
+   
     
   const insertNoteToDB = () => {
     const data = formValues;
@@ -150,10 +170,8 @@ const Home = () => {
 
     axios
       .post(`${urlDelApi}/Notes`, {
-        UserID: i+1,
-        Title: "Note "+i,
-        Content:formValues.nota,
-        CreatedAt: "2023-10-10 15:56:41",
+        Title: "Note",
+        Content:formValues.nota
       })
       .then(function (response) {
         // handle success
@@ -242,6 +260,33 @@ const Home = () => {
           <Button onClick={insertNoteToDB} variant="contained" sx={{ mx: 2 }}>
             Insertar nota
           </Button>
+          <br></br>
+          <br></br>
+
+          
+          <h2>Actualice su nota acá!</h2>
+          <TextField
+            id="outlined-basic"
+            name="ID"
+            label="ID nota"
+            onChange={onChancheInput}
+            variant="standard"
+          />
+          <br></br>
+          <TextField
+            id="outlined-basic"
+            name="nota"
+            label="Nota"
+            onChange={onChancheInput}
+            variant="standard"
+          />
+          <br></br>
+          <br></br>
+          <Button onClick={updateAPINotes} variant="contained" sx={{ mx: 2 }}>
+            Actualizar nota
+          </Button>
+          <br></br>
+          <br></br>
           <Button onClick={clearNotes} color="secondary" variant="text">
             Limpiar
           </Button>
