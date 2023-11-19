@@ -251,7 +251,7 @@ const Home = () => {
           </Button>
         </Grid>
         <Grid item xs={6}>
-          <h2>Llamar API y base de datos</h2>
+          <h2>Llamar/insertar API y base de datos</h2>
           <p>
             {" "}
             Este boton hace un llamado a la base de datos previamente
@@ -262,9 +262,7 @@ const Home = () => {
         
           <Grid item xs={3} style={{}}>
           <form onSubmit={handleSubmit}>
-          <Button  type="submit" variant="contained" sx={{ mx: 2 }}>
-            Insertar nota API
-          </Button>
+          
           
           <label>
           UserID:
@@ -296,14 +294,14 @@ const Home = () => {
     onChange={handleChange}
   />
 </label>
-<br />
-
-
-
+<br /><br />
+<Button  type="submit" variant="contained" sx={{ mx: 2 }}>
+            Insertar nota API
+          </Button>
           </form>
           </Grid>
 
-          <Button onClick={callAPINotes} variant="contained" sx={{ mx: 2 }}>
+          <Button onClick={callAPINotes} variant="contained" sx={{ mx: 3 }}>
             Llamar API
           </Button>
           <br></br><br></br>

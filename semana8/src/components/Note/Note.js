@@ -59,7 +59,6 @@ const Note = (props) => {
   const handleEditClick = () => {
     // Si estás editando, llama a la función para editar
       editNoteToDB();
-    
   }
 
   return (
