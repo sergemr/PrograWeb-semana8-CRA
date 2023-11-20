@@ -146,32 +146,32 @@ const Home = () => {
   
   useEffect(()=>{
     axios
-    .get(`${urlDelApi}/Notes`+formValues.NoteID)
-    .then(function (response) {
-      // handle success
-      console.log(response);
-      console.log(response.data.records);
-      console.log(response.statusText);
-    })
+    .get(`${urlDelApi}/Notes`+formValues)
+      .then(res=> console.log(res.data))
   });
 
-  
-  const updateApiNotes =(event)=>{
-    event.preventDefault()
-    axios
-    .put('https://localhost/dashboard/apiOP.php/records/1',{formValues})
-    .then(function (response) {
-      // handle success
-      callAPINotes();
-    })
-    .catch(function (error) {
-      // handle error
-      console.log(error);
-    })
-    .finally(function () {
-      // always executed
-    });
 
+  const updateAPINotes = (event) => {
+    axios
+      .put(`${urlDelApi}/Notes`,formValues)
+      .then(function (response) {
+        // handle success
+        console.log(response);
+        console.log(response.data.records);
+        console.log(response.statusText);
+        setNotes(response.data.records);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+  };
+
+  
+  
   const insertNoteToDB = () => {
     const data = formValues;
     console.log("data");
@@ -291,7 +291,7 @@ const Home = () => {
           />
           <br></br>
           <br></br>
-          <Button  variant="contained" sx={{ mx: 2 }}>
+          <Button onClick={updateAPINotes} variant="contained" sx={{ mx: 2 }}>
             Actualizar nota
           </Button>
           <br></br>
