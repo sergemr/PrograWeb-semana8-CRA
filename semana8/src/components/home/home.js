@@ -144,22 +144,16 @@ const Home = () => {
       });
   };
   
-  useEffect(()=>{
-    axios
-    .get(`${urlDelApi}/Notes`+formValues)
-      .then(res=> console.log(res.data))
-  });
+
 
 
   const updateAPINotes = (event) => {
+    event.preventDefault()
     axios
-      .put(`${urlDelApi}/Notes`,formValues)
+      .put(`${urlDelApi}/Notes/1`,formValues)
       .then(function (response) {
         // handle success
-        console.log(response);
-        console.log(response.data.records);
-        console.log(response.statusText);
-        setNotes(response.data.records);
+        callAPINotes();
       })
       .catch(function (error) {
         // handle error
