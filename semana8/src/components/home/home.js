@@ -113,25 +113,6 @@ const Home = () => {
         // always executed
       });
   };
-  const updateAPINotes = (event) => {
-    axios
-    .get(`${urlDelApi}/Notes`+formValues.NoteID)
-      .then(function (response) {
-        // handle success
-        console.log(response);
-        console.log(response.data.records);
-        console.log(response.statusText);
-        setNotes(response.data.records);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .finally(function () {
-        // always executed
-      });
-  };
-
   
   const callAPMockNotes = (event) => {
     setNotes(mockNotes);
@@ -162,8 +143,35 @@ const Home = () => {
         // always executed
       });
   };
-   
-    
+  
+  useEffect(()=>{
+    axios
+    .get(`${urlDelApi}/Notes`+formValues.NoteID)
+    .then(function (response) {
+      // handle success
+      console.log(response);
+      console.log(response.data.records);
+      console.log(response.statusText);
+    })
+  });
+
+  
+  const updateApiNotes =(event)=>{
+    event.preventDefault()
+    axios
+    .put('https://localhost/dashboard/apiOP.php/records/1',{formValues})
+    .then(function (response) {
+      // handle success
+      callAPINotes();
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+    .finally(function () {
+      // always executed
+    });
+
   const insertNoteToDB = () => {
     const data = formValues;
     console.log("data");
@@ -185,6 +193,7 @@ const Home = () => {
         // always executed
       });
   };
+  
   return (
     <div className={styles.Home}>
       <h1>{data}</h1>
@@ -282,7 +291,7 @@ const Home = () => {
           />
           <br></br>
           <br></br>
-          <Button onClick={updateAPINotes} variant="contained" sx={{ mx: 2 }}>
+          <Button  variant="contained" sx={{ mx: 2 }}>
             Actualizar nota
           </Button>
           <br></br>
