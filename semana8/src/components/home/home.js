@@ -1,16 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import styles from "./home.module.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-
+import { useState } from "react";
 import axios from "axios";
 import User from "../User/User";
 import Note from "../Note/Note";
 
 const Home = () => {
+  //constante
   const [data, setData] = React.useState(
     "Ejemplo React, estados y llamados a API"
   );
@@ -19,7 +20,7 @@ const Home = () => {
   const [users, setUsers] = React.useState();
   const [notes, setNotes] = React.useState();
 
-  const urlDelApi = "https://localhost/dashboard/apiOP.php/records";
+  const urlDelApi = "http://localhost/dashboard/apiDB.php/records";
 
   const mockUser = {
     usuario: "admin",
@@ -97,7 +98,7 @@ const Home = () => {
 
   const callAPINotes = (event) => {
     axios
-      .get(`${urlDelApi}/Notes`)
+      .get(`${urlDelApi}/notes`) //cambio direccion
       .then(function (response) {
         // handle success
         console.log(response);
@@ -113,7 +114,6 @@ const Home = () => {
         // always executed
       });
   };
-  
   const callAPMockNotes = (event) => {
     setNotes(mockNotes);
   };
@@ -143,37 +143,64 @@ const Home = () => {
         // always executed
       });
   };
-  
 
 
-
-  const updateAPINotes = (event) => {
-    event.preventDefault()
-    axios
-      .put(`${urlDelApi}/Notes/1`,formValues)
-      .then(function (response) {
-        // handle success
-        callAPINotes();
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .finally(function () {
-        // always executed
+  //inicio tarea
+ //varibale para ingresar datos al api
+    const [formData, setFormData] = useState({
+      UserID: '',
+      Title: '',
+      Content: ''
+    });
+    const handleChange = (event) => {
+      setFormData({
+        ...formData,
+        [event.target.name]: e.target.value
       });
-  };
+    };
 
-  
-  
+//reset data when onclick submit button
+    const handleReset = () => {
+      setFormData({
+        UserID: '',
+        Title: '',
+        Content: ''
+      });
+    };
+
+    const insertNoteToDB2 = () => {
+      axios
+      .post(`${urlDelApi}/notes`, formData)
+      .then(function (response) {
+        // calling reset action
+        handleReset();
+      })
+        .then(function (response) {
+          // handle success
+          callAPINotes();
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function () {
+          // always executed
+        });
+    };
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      insertNoteToDB2(formData);
+    };
+
+
+    //codigo local para bd
   const insertNoteToDB = () => {
-    const data = formValues;
-    console.log("data");
-
     axios
-      .post(`${urlDelApi}/Notes`, {
-        Title: "Note",
-        Content:formValues.nota
+      .post(`${urlDelApi}/notes`, {
+        UserID: 3,
+        Title: "Task 1",
+        Content: "nota quemada insertada desde vs code.",
       })
       .then(function (response) {
         // handle success
@@ -187,7 +214,6 @@ const Home = () => {
         // always executed
       });
   };
-  
   return (
     <div className={styles.Home}>
       <h1>{data}</h1>
@@ -225,15 +251,60 @@ const Home = () => {
           </Button>
         </Grid>
         <Grid item xs={6}>
-          <h2>Llamar API y base de datos</h2>
+          <h2>Llamar e insertar API con base de datos</h2>
           <p>
             {" "}
             Este boton hace un llamado a la base de datos previamente
             configurada
-          </p>
-          <Button onClick={callAPINotes} variant="contained" sx={{ mx: 2 }}>
+          </p> 
+        
+
+        
+          <Grid item xs={3} style={{}}>
+          <form onSubmit={handleSubmit}>
+          
+          
+          <label>
+          UserID:
+          <input
+            type="text"
+            name="UserID"
+            value={formData.UserID}
+            onChange={handleChange}
+          />
+        </label>
+        <br />
+
+<label>
+  Título:
+  <input
+    type="text"
+    name="Title"
+    value={formData.Title}
+    onChange={handleChange}
+  />
+</label>
+<br />
+
+<label>
+  Contenido:
+  <textarea
+    name="Content"
+    value={formData.Content}
+    onChange={handleChange}
+  />
+</label>
+<br /><br />
+<Button  type="submit" variant="contained" sx={{ mx: 2 }}>
+            Insertar nota API
+          </Button>
+          </form>
+          </Grid>
+
+          <Button onClick={callAPINotes} variant="contained" sx={{ mx: 3 }}>
             Llamar API
           </Button>
+          <br></br><br></br>
           <Button onClick={clearNotes} color="secondary" variant="text">
             Limpiar
           </Button>
@@ -249,47 +320,9 @@ const Home = () => {
             Llamar Local
           </Button>
 
-          <br></br>
-          <h2>Inserte su nota acá!</h2>
-          <TextField
-            id="outlined-basic"
-            name="nota"
-            label="Nota"
-            onChange={onChancheInput}
-            variant="standard"
-          />
-          <br></br>
-          <br></br>
           <Button onClick={insertNoteToDB} variant="contained" sx={{ mx: 2 }}>
             Insertar nota
           </Button>
-          <br></br>
-          <br></br>
-
-          
-          <h2>Actualice su nota acá!</h2>
-          <TextField
-            id="outlined-basic"
-            name="ID"
-            label="ID nota"
-            onChange={onChancheInput}
-            variant="standard"
-          />
-          <br></br>
-          <TextField
-            id="outlined-basic"
-            name="nota"
-            label="Nota"
-            onChange={onChancheInput}
-            variant="standard"
-          />
-          <br></br>
-          <br></br>
-          <Button onClick={updateAPINotes} variant="contained" sx={{ mx: 2 }}>
-            Actualizar nota
-          </Button>
-          <br></br>
-          <br></br>
           <Button onClick={clearNotes} color="secondary" variant="text">
             Limpiar
           </Button>
